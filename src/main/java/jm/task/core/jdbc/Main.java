@@ -12,6 +12,7 @@ public class Main {
     public static void main(String[] args) throws SQLException {
         // реализуйте алгоритм здесь
         UserServiceImpl service = new UserServiceImpl();
+        service.createUsersTable();
 
         service.saveUser("Antony", "Belov", (byte) 32);
         service.saveUser("Billy", "Clover", (byte) 24);
