@@ -1,12 +1,15 @@
 package jm.task.core.jdbc.util;
 
 import jm.task.core.jdbc.model.User;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 
 public class Util {
@@ -30,11 +33,35 @@ public class Util {
         return connection;
     }
 
-    public static SessionFactory getSession() {
+/*    public static SessionFactory getSession() {
         return new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(User.class)
                 .buildSessionFactory();
-    }
+    }*/
+    private static final SessionFactory concreteSessionFactory;
+    static {
+        try {
+            Properties prop= new Properties();
+            prop.setProperty("hibernate.connection.url",  DB_URL);
+            prop.setProperty("hibernate.connection.username", DB_USERNAME);
+            prop.setProperty("hibernate.connection.password", DB_PASSWORD);
+            prop.setProperty("connection.driver_class", DB_DRIVER);
+            prop.setProperty("dialect", "org.hibernate.dialect.MySQLDialect");
 
+            prop.setProperty("hibernate.hbm2ddl.auto", "create");
+
+            concreteSessionFactory = new org.hibernate.cfg.Configuration()
+                    .addProperties(prop)
+                    .addAnnotatedClass(User.class)
+                    .buildSessionFactory();
+
+        } catch (Throwable ex) {
+            throw new ExceptionInInitializerError(ex);
+        }
+    }
+    public static Session getSession() throws HibernateException {
+        return concreteSessionFactory.openSession();
+    }
 }
+
