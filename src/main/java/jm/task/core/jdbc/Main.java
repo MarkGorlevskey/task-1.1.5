@@ -10,19 +10,20 @@ import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
-        // реализуйте алгоритм здесь
+      // реализуйте алгоритм здесь
         UserServiceImpl service = new UserServiceImpl();
+//        service.getAllUsers();
+
+//        service.saveUser("Ant4ony", "Belova", (byte) 22);
+//        service.saveUser("Billy", "Clover", (byte) 24);
+//        service.saveUser("Calvin", "Druzhe", (byte) 48);
+//        service.saveUser("Daniil", "Elkin", (byte) 16);
+
+
+//        Stream.of(service.getAllUsers()).forEach(System.out::println);
         service.createUsersTable();
+//        service.cleanUsersTable();
 
-        service.saveUser("Antony", "Belov", (byte) 32);
-        service.saveUser("Billy", "Clover", (byte) 24);
-        service.saveUser("Calvin", "Druzhe", (byte) 48);
-        service.saveUser("Daniil", "Elkin", (byte) 16);
-
-        Stream.of(service.getAllUsers()).forEach(System.out::println);
-
-        // service.cleanUsersTable();
-
-        // service.dropUsersTable();
+// service.dropUsersTable();
     }
 }
