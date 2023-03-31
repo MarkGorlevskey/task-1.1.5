@@ -2,12 +2,38 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import java.util.List;
+import java.util.Properties;
+
+import static jm.task.core.jdbc.util.Util.*;
 
 public class UserDaoHibernateImpl implements UserDao {
-    private final Session session = Util.getSession();
+    private static final SessionFactory concreteSessionFactory;
+    static {
+        try {
+            Properties prop= new Properties();
+            prop.setProperty("hibernate.connection.url",  DB_URL);
+            prop.setProperty("hibernate.connection.username", DB_USERNAME);
+            prop.setProperty("hibernate.connection.password", DB_PASSWORD);
+            prop.setProperty("connection.driver_class", DB_DRIVER);
+            prop.setProperty("dialect", "org.hibernate.dialect.MySQLDialect");
+
+            prop.setProperty("hibernate.hbm2ddl.auto", "create");
+
+            concreteSessionFactory = new org.hibernate.cfg.Configuration()
+                    .addProperties(prop)
+                    .addAnnotatedClass(User.class)
+                    .buildSessionFactory();
+
+        } catch (Throwable ex) {
+            throw new ExceptionInInitializerError(ex);
+        }
+    }
+    private final Session session = concreteSessionFactory.openSession();
     public UserDaoHibernateImpl() {
 
     }
